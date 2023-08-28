@@ -1,4 +1,6 @@
 venv/
 venv38/
-
+out/
+nvdiffrast/
+tiny-cuda-nn/
 *.pyc
