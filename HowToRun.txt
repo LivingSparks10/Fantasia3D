@@ -1,0 +1,54 @@
+
+
+
+#TESTS 
+
+#NVCC 
+
+C:\Users\david>nvcc -V
+nvcc: NVIDIA (R) Cuda compiler driver
+Copyright (c) 2005-2022 NVIDIA Corporation
+Built on Wed_Sep_21_10:41:10_Pacific_Daylight_Time_2022
+Cuda compilation tools, release 11.8, V11.8.89
+Build cuda_11.8.r11.8/compiler.31833905_0
+
+
+
+#NVIDIA - SMI 
+
+
+(venv38) C:\Users\david\dev\ExternalProjects\Fantasia3D>nvidia-smi
+
++-----------------------------------------------------------------------------+
+| NVIDIA-SMI 528.52       Driver Version: 528.52       CUDA Version: 12.0     |
+|-------------------------------+----------------------+----------------------+
+| GPU  Name            TCC/WDDM | Bus-Id        Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp  Perf  Pwr:Usage/Cap|         Memory-Usage | GPU-Util  Compute M. |
+|                               |                      |               MIG M. |
+|===============================+======================+======================|
+|   0  NVIDIA GeForce ... WDDM  | 00000000:01:00.0 Off |                  N/A |
+| N/A   38C    P0    28W / 140W |      0MiB / 16384MiB |      0%      Default |
+|                               |                      |                  N/A |
++-------------------------------+----------------------+----------------------+
+
++-----------------------------------------------------------------------------+
+| Processes:                                                                  |
+|  GPU   GI   CI        PID   Type   Process name                  GPU Memory |
+|        ID   ID                                                   Usage      |
+|=============================================================================|
+|  No running processes found                                                 |
++-----------------------------------------------------------------------------+
+
+
+
+
+
+PIP INSTALL workingReqs.txt 
+
+BUT PAY ATTENTION!!!!
+
+Some references are with an abslotute path!! 
+
+nvdiffrast and tiny-cuda-nn, must be installed downloading them in the folder
+
+
