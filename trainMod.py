@@ -44,6 +44,7 @@ from render.video import Video
 import random
 import imageio
 import os.path as osp
+import shutil
 
 
 ###############################################################################
@@ -266,7 +267,7 @@ def validate(glctx, geometry, opt_material, lgt, dataset_validate, out_dir, FLAG
     os.makedirs(ks_dir, exist_ok=True)
     os.makedirs(normal_dir, exist_ok=True)
     os.makedirs(mask_dir, exist_ok=True)
-    
+
     print("Running validation")
     dataloader_validate = tqdm(dataloader_validate)
     for it, target in enumerate(dataloader_validate):
@@ -527,6 +528,10 @@ def seed_everything(seed, local_rank):
     # torch.backends.cudnn.benchmark = True  
 
 if __name__ == "__main__":
+
+    # Starting the time to log the time elapsed
+    start_time = time.time()  # Record the start time
+
     parser = argparse.ArgumentParser(description='nvdiffrec')
     parser.add_argument('--config', type=str, default=None, help='Config file')
     parser.add_argument('-i', '--iter', type=int, default=5000)
@@ -593,7 +598,7 @@ if __name__ == "__main__":
     FLAGS.multi_gpu  = "WORLD_SIZE" in os.environ and int(os.environ["WORLD_SIZE"]) > 1
     
     # Get the current timestamp
-    current_timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S") #datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    current_timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M_%S") #datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 
     if FLAGS.multi_gpu:
         FLAGS.gpu_number = int(os.environ["WORLD_SIZE"])
@@ -614,8 +619,6 @@ if __name__ == "__main__":
     else:
         FLAGS.out_dir = f'out/{current_timestamp}_{FLAGS.out_dir}'
 
-   
-
     if FLAGS.local_rank == 0:
         print("Config / Flags:")
         print("---------")
@@ -626,6 +629,14 @@ if __name__ == "__main__":
     seed_everything(FLAGS.seed, FLAGS.local_rank)
     
     os.makedirs(FLAGS.out_dir, exist_ok=True)
+
+    if FLAGS.config is not None:
+        input_file_path = FLAGS.config
+        output_file_path = os.path.join(FLAGS.out_dir, "config.json")
+        
+        # Copy the file to the specified output directory
+        shutil.copy(input_file_path, output_file_path)
+
 
     # glctx = dr.RasterizeGLContext()
     glctx = dr.RasterizeCudaContext()
@@ -759,6 +770,18 @@ if __name__ == "__main__":
     
     else:
         assert False, "Invalid mode type"
+
+    # Calculate elapsed time
+    elapsed_time = time.time() - start_time
+    elapsed_minutes = int(elapsed_time // 60)
+    elapsed_seconds = int(elapsed_time % 60)
+
+    # Create filename
+    filename = os.path.join(FLAGS.out_dir, f"{elapsed_minutes:02d}_{elapsed_seconds:02d}.txt")
+
+    # Save to file
+    with open(filename, "w") as file:
+        file.write("end of file")
    
     
 
