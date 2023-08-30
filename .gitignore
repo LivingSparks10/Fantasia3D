@@ -4,3 +4,8 @@ out/
 nvdiffrast/
 tiny-cuda-nn/
 *.pyc
+
+#TouchDesigner
+*.[0-9]*.toe
+
+Backup/
