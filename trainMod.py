@@ -556,7 +556,7 @@ if __name__ == "__main__":
     parser.add_argument("--add_directional_text", action='store_true', default=False)
     parser.add_argument('--mode', default='geometry_modeling', choices=['geometry_modeling', 'appearance_modeling'])
     parser.add_argument('--text', default=None, help="text prompt")
-    parser.add_argument('--sdf_init_shape', default='ellipsoid', choices=['ellipsoid', 'cylinder', 'custom_mesh'])
+    parser.add_argument('--sdf_init_shape', default='ellipsoid', choices=['ellipsoid', 'cylinder', 'custom_mesh','cube'])
     parser.add_argument('--camera_random_jitter', type= float, default=0.4, help="A large value is advantageous for the extension of objects such as ears or sharp corners to grow.")
     parser.add_argument('--fovy_range', nargs=2, type=float, default=[25.71, 45.00])
     parser.add_argument('--elevation_range', nargs=2, type=int, default=[-10, 45], help="The elevatioin range must in [-90, 90].")
@@ -659,7 +659,7 @@ if __name__ == "__main__":
         lgt = None
         # lgt1 = light.load_env(FLAGS.envmap1, scale=FLAGS.env_scale)
     
-    if FLAGS.sdf_init_shape in ['ellipsoid', 'cylinder', 'custom_mesh'] and FLAGS.mode == 'geometry_modeling':
+    if FLAGS.sdf_init_shape in ['ellipsoid', 'cylinder', 'custom_mesh', 'cube'] and FLAGS.mode == 'geometry_modeling':
         if FLAGS.sdf_init_shape == 'ellipsoid':
             init_shape = o3d.geometry.TriangleMesh.create_sphere(1)
         elif FLAGS.sdf_init_shape == 'cylinder':
@@ -668,9 +668,12 @@ if __name__ == "__main__":
             if FLAGS.base_mesh:
                 init_shape = get_normalize_mesh(FLAGS.base_mesh)
             else:
-                assert False, "[Error] The path of custom mesh is invalid ! (geometry modeling)"
+                assert False, "[Error] The path of custom mesh is invalid! (geometry modeling)"
+        elif FLAGS.sdf_init_shape == 'cube':
+            init_shape = o3d.geometry.TriangleMesh.create_box(width=1.0, height=1.0, depth=1.0)
         else:
             assert False, "Invalid init type"
+
   
         vertices = np.asarray(init_shape.vertices)
         vertices[...,0]=vertices[...,0] * FLAGS.sdf_init_shape_scale[0]
