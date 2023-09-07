@@ -1,3 +1,5 @@
+WARNING TRITON: There's no Windows triton, and that warning does not mean anything is wrong. We need to suppress the warning message.
+
 
 
 
@@ -61,6 +63,50 @@ Test dmtet_grid 128 vs 256
 ############## coarse_iter ##########  1500 vs 750
 
 
- 
+# mesh scale from 2.5 to 1.0 ---> CUDA OUT OF MEMORY
+# mesh scale from 2.5 to 2.0 ---> CUDA OUT OF MEMORY
+
+### BASE #########################
+{
+    "mode": "geometry_modeling",
+    "sdf_init_shape": "ellipsoid",
+    "sdf_init_shape_scale": [0.35, 0.56, 0.56],
+    "translation_y": -0.3,
+    "random_textures": true,
+    "iter": 3000,
+    "coarse_iter": 1500,
+    "save_interval": 100,
+    "train_res": [512, 512],
+    "batch": 3,
+    "dmtet_grid" : 256,
+    "display": [{"bsdf" : "normal"}],
+    "train_background": "black",
+    "validate" : true,
+    "mesh_scale" : 2.5,
+    "out_dir": "acquarium_rocks_archd_BASE",
+    "text" : "acquarium rocks arch",
+    "seed" : 1,
+    "add_directional_text": false,
+    "camera_random_jitter": 0.4,
+    "fovy_range": [25.71, 45],
+    "elevation_range": [-10, 45],
+    "guidance_weight": 50
+}
 
 
+# Test Quayola 
+
+Batch 1 - 6 
+
+
+1 x
+2 x
+3 x
+4 OOM
+5 OOM
+6 OOM 
+
+** Batch results: Increase batch  -> Seamns Increase quality (Note:  crash when over 3 in my 3080 TI 12GB, Batch = 1 not stable ) ELAPSED 11 - 17 - 23 Time increase 
+
+
+# Cube Start Test
