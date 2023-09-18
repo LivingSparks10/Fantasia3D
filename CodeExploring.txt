@@ -1,0 +1,28 @@
+
+
+trainMod.py
+
+    optimize_mesh # This method CREATE the base_mesh ###
+
+
+ obj.write_obj ( base_mesh )
+
+
+
+# VIDEO LOG Creation
+
+trainMod.py
+    parser.add_argument('-vi', '--video_interval', type=int, default=10, help="The interval of saving a frame of the video")
+    ...
+    video = Video(FLAGS.out_dir)
+    ...
+    buffers = geometry.render(glctx, params, lgt, opt_material, bsdf='normal', if_use_bump = FLAGS.if_use_bump)
+    ...
+    video_image = video.ready_image(video_image)
+
+### MATERIAL TEST
+
+video_render_material
+
+
+render/video.py --> Video() CLASS HERE

@@ -1,4 +1,34 @@
+
+The method is optimized using 8 Nvidia RTX 3090 GPUs for approximately 25 minutes (3000 iterations).
+To achieve more directionality (optimization only in one direction) to the object, use fewer GPUs.
+The parameter "sdf_init_shape_scale" of the starting object impacts the number of final points.
+Increasing both "mesh scale" and "sdf_init_shape_scale" (from 4 to 1) enhances the resolution of the final piece.
+Before exporting a mesh from software like Blender, it's important to triangulate the object.
+When comparing similar OBJ results, starting with more vertices leads to more vertices in the final OBJ (34k vs. 51k).
+The starting shape influence a LOT the final OBJ - 15/09/2023 (Some test in learning speed could be done)
+
+For situations where the requirement for the number of mesh faces is not high, I recommend using a DMTet resolution of 128 to achieve a balance between quality and generation speed. 
+When using a resolution of 128 or less, the generation speed will be significantly faster.
+
+
+
+
+
+
+
 WARNING TRITON: There's no Windows triton, and that warning does not mean anything is wrong. We need to suppress the warning message.
+
+As explained in the paper’s implementation details, our method is optimized on 8 Nvidia RTX 3090 GPUs for 3000 iterations (about 25 minutes) 
+for geometry modeling and 2000 iterations (about 20 minutes) for appearance modeling. We found that the larger the batch size, the faster the results converge,
+ so we utilized the full capacity of the 3090 graphics memory. However, either 4 or 6 Nvidia RTX 3090 GPUs are sufficient for generating objects without obvious directionality.
+  We haven't tried generating 3D content with fewer GPUs yet. The optimization time mentioned above is for the majority of the generated examples. 
+  In fact, many examples only require 30~35 minutes in total (including the generation of geometry and appearance) to converge.
+
+
+!!! - Less GPU, more directionality to the object 
+
+
+https://fantasia3d.github.io/assets/Fantasia3D.pdf
 
 
 
@@ -110,3 +140,85 @@ Batch 1 - 6
 
 
 # Cube Start Test
+
+Sphere and ellipsoid ok, but cube bad quality 15k points instead 70k
+
+I've centered and now it works
+
+! -> sdf_init_shape_scale of the starting object affect the number of final points 
+! -> Increaseing mesh scalea and sdf_init_shape_scale (4 - 1), increase the resolution of the final piece
+
+
+
+CUBE
+Number of vertices: 8
+Number of num_faces: 12
+
+ellipsoid
+Number of vertices of init shape: 762
+Number of num_faces of init shape : 1520
+
+!!! - Before exporting a mesh from Blender or other programs TRIANGULATE the object
+
+
+"sdf_init_shape": "custom_mesh",
+"base_mesh": "data/cube/cube_triangulate.obj",
+
+Number of vertices of init shape: 24
+Number of num_faces of init shape : 12
+
+###
+
+"sdf_init_shape": "custom_mesh",
+"base_mesh": "data/cube/cube_remeshBlocks_triangulate.obj",
+Number of vertices of init shape: 1536
+Number of num_faces of init shape : 2700
+
+### Discuss results between simple cube and remeshed
+
+! -- Similar Obj results, but more vertices at start more vertices at end obj (34k vs 51k)
+
+
+
+ "text" : "broken fragments of eroded rocks", 3000 iterations -> it stucks at 1500 iteration!! (Maybe GPU issue?? -- MAYBE TouchDesigner was open) 
+
+
+{
+    "mode": "geometry_modeling",
+    "sdf_init_shape": "custom_mesh",
+    "base_mesh": "data/cube/cube_remeshBlocks_triangulate.obj",
+    "sdf_init_shape_scale": [0.5, 0.5, 0.5],
+    "translation_y": 0,
+    "random_textures": true,
+    "iter": 3000,
+    "coarse_iter": 1500,
+    "save_interval": 250,
+    "train_res": [512, 512],
+    "batch": 3,
+    "dmtet_grid" : 256,
+    "display": [{"bsdf" : "normal"}],
+    "train_background": "black",
+    "validate" : true,
+    "mesh_scale" : 3,
+    "out_dir": "fragments",
+    "text" : "broken fragments of eroded rocks",
+    "seed" : 1,
+    "add_directional_text": false,
+    "camera_random_jitter": 0.4,
+    "fovy_range": [25.71, 45],
+    "elevation_range": [-10, 45],
+    "guidance_weight": 50
+}
+
+IT STUCKS AT 1500 --  MAYBE TouchDesigner was open
+
+
+Without TouchDesigner --> CUDA out of memory - Try simplified Cube   "data/cube/cube_triangulate.obj",
+
+
+
+
+TODO - CREATE A Method that stop execution when the mesh goes wild (explode)
+
+
+######## TEST ADD "a highly detailed.... 
