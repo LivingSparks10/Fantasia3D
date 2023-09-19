@@ -427,7 +427,9 @@ def optimize_mesh(
                             )  
                     rot_ang += 1
                     if FLAGS.mode =='geometry_modeling':
-                        buffers = geometry.render(glctx, params, lgt, opt_material, bsdf='normal', if_use_bump = FLAGS.if_use_bump)
+
+                        video_render_material = FLAGS.video_render_material
+                        buffers = geometry.render(glctx, params, lgt, opt_material, bsdf=video_render_material, if_use_bump = FLAGS.if_use_bump)
                         video_image = (buffers['shaded'][0, ..., 0:3]+1)/2
                     else:
                         buffers  = geometry.render(glctx, params, lgt, opt_material, bsdf='pbr',  if_use_bump = FLAGS.if_use_bump)
@@ -571,6 +573,8 @@ if __name__ == "__main__":
     parser.add_argument("--front_threshold", type= int, nargs=1, default= 45 , help="the range of front view would be [-front_threshold, front_threshold")
     parser.add_argument("--if_use_bump", type=bool, default= True , help="whether to use perturbed normals during appearing modeling")
     parser.add_argument("--uv_padding_block", type= int, default= 4 , help="The block of uv padding.")
+    parser.add_argument("--video_render_material", default='normal', choices=[ 'kd', 'ks', 'normal','diffuse','pbr'])
+
     FLAGS = parser.parse_args()
     FLAGS.mtl_override        = None                     # Override material of model
     FLAGS.dmtet_grid          = 64                       # Resolution of initial tet grid. We provide 64, 128 and 256 resolution grids. Other resolutions can be generated with https://github.com/crawforddoran/quartet
@@ -670,9 +674,18 @@ if __name__ == "__main__":
             else:
                 assert False, "[Error] The path of custom mesh is invalid! (geometry modeling)"
         elif FLAGS.sdf_init_shape == 'cube':
-            init_shape = o3d.geometry.TriangleMesh.create_box(width=1.0, height=1.0, depth=1.0)
+            cube = o3d.geometry.TriangleMesh.create_box(width=1.0, height=1.0, depth=1.0).translate((-0.5, -0.5, -0.5))
+      
+            init_shape = cube
         else:
             assert False, "Invalid init type"
+
+        # Get the number of vertices and edges
+        num_vertices = len(init_shape.vertices)
+        num_faces = len(init_shape.triangles)
+
+        print("Number of vertices of init shape:", num_vertices)
+        print("Number of num_faces of init shape :", num_faces)
 
   
         vertices = np.asarray(init_shape.vertices)

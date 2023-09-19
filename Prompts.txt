@@ -6,6 +6,7 @@ Increasing both "mesh scale" and "sdf_init_shape_scale" (from 4 to 1) enhances t
 Before exporting a mesh from software like Blender, it's important to triangulate the object.
 When comparing similar OBJ results, starting with more vertices leads to more vertices in the final OBJ (34k vs. 51k).
 The starting shape influence a LOT the final OBJ - 15/09/2023 (Some test in learning speed could be done)
+Batch results: Increase batch  -> Seamns Increase quality (Note:  crash when over 3 in my 3080 TI 12GB, Batch = 1 not stable ) ELAPSED 11 - 17 - 23 Time increase 
 
 For situations where the requirement for the number of mesh faces is not high, I recommend using a DMTet resolution of 128 to achieve a balance between quality and generation speed. 
 When using a resolution of 128 or less, the generation speed will be significantly faster.
